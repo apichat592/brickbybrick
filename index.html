@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brick by Brick: Process Improvement Through Collaboration</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js CDN for Round Comparison Graphs -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        @media print {
+            .no-print {
+                display: none !important;
+            }
+            body {
+                background-color: white !important;
+                padding: 0 !important;
+            }
+            .print-border {
+                border-color: #000 !important;
+            }
+        }
+    </style>
+</head>
+<body class="bg-slate-100 text-slate-800 min-h-screen p-4 md:p-8">
+
+    <div class="max-w-7xl mx-auto bg-white rounded-2xl shadow-xl overflow-hidden border border-slate-200">
+        
+        <!-- Top Toolbar / Actions -->
+        <div class="bg-slate-900 text-white p-4 flex flex-wrap items-center justify-between gap-4 no-print">
+            <div class="flex items-center space-x-3">
+                <div class="bg-amber-400 text-slate-950 font-bold p-1.5 rounded-xl text-lg flex items-center justify-center w-12 h-12 shadow-md border-2 border-amber-300">
+                    <!-- SVG Iconic LEGO Wooden Duck Icon -->
+                    <svg viewBox="0 0 64 64" fill="currentColor" class="w-8 h-8">
+                        <path d="M4 32 C10 32, 12 28, 14 26" stroke="#ef4444" stroke-width="2" fill="none" stroke-linecap="round"/>
+                        <circle cx="44" cy="22" r="2.5" fill="#0f172a" />
+                        <path d="M52 24 L60 26 L52 30 Z" fill="#ef4444" stroke="#991b1b" stroke-width="1" stroke-linejoin="round"/>
+                        <path d="M38 18 C38 13, 44 12, 48 16 C51 19, 52 24, 52 26 L38 26 Z" fill="#eab308" />
+                        <path d="M18 30 C18 20, 26 18, 38 18 L38 38 L22 38 C19.79 38, 18 36.21, 18 34 Z" fill="#facc15" stroke="#ca8a04" stroke-width="1.5" />
+                        <rect x="22" y="24" width="12" height="10" rx="1" fill="#3b82f6" />
+                        <rect x="25" y="27" width="6" height="4" rx="0.5" fill="#60a5fa" opacity="0.6"/>
+                        <circle cx="22" cy="42" r="5" fill="#ef4444" stroke="#7f1d1d" stroke-width="1.5"/>
+                        <circle cx="22" cy="42" r="1.5" fill="#fef08a" />
+                        <circle cx="44" cy="42" r="5" fill="#ef4444" stroke="#7f1d1d" stroke-width="1.5"/>
+                        <circle cx="44" cy="42" r="1.5" fill="#fef08a" />
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="text-xl font-bold tracking-tight">Brick by Brick: Process Improvement Through Collaboration</h1>
+                    <p class="text-xs text-slate-400">Real-time plant metrics, cycle time & muda tracker (4 Rounds) with Analytics</p>
+                </div>
+            </div>
+            <div class="flex items-center space-x-3">
+                <button onclick="resetForm()" class="bg-slate-700 hover:bg-slate-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition flex items-center gap-2">
+                    🔄 Reset All
+                </button>
+                <button onclick="window.print()" class="bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2 rounded-lg text-sm font-medium transition flex items-center gap-2 shadow-sm">
+                    🖨️ Print / PDF
+                </button>
+            </div>
+        </div>
+
+        <div class="p-6 border-b border-slate-200 bg-slate-50/50">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="flex items-center space-x-3">
+                    <label for="factoryNo" class="font-bold text-slate-700 whitespace-nowrap">Factory No:</label>
+                    <input type="text" id="factoryNo" placeholder="e.g. FAC-04" class="w-full bg-white border-b-2 border-slate-300 focus:border-emerald-600 px-2 py-1 outline-none font-medium text-slate-800">
+                </div>
+                <div class="flex items-center space-x-3">
+                    <label for="plantManager" class="font-bold text-slate-700 whitespace-nowrap">Plant Manager:</label>
+                    <input type="text" id="plantManager" placeholder="Manager Name" class="w-full bg-white border-b-2 border-slate-300 focus:border-emerald-600 px-2 py-1 outline-none font-medium text-slate-800">
+                </div>
+                <div class="flex items-center space-x-3">
+                    <label for="productionRecorder" class="font-bold text-slate-700 whitespace-nowrap">Production Recorder:</label>
+                    <input type="text" id="productionRecorder" placeholder="Recorder Name" class="w-full bg-white border-b-2 border-slate-300 focus:border-emerald-600 px-2 py-1 outline-none font-medium text-slate-800">
+                </div>
+            </div>
+        </div>
+
+        <div class="p-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+                
+                <!-- ROUND 1 -->
+                <div class="border-2 border-slate-800 rounded-xl overflow-hidden flex flex-col bg-white shadow-sm print-border">
+                    <div class="bg-slate-700 text-white text-center font-bold py-3 text-lg tracking-wide">
+                        Round 1
+                    </div>
+                    
+                    <!-- Input Fields Section -->
+                    <div class="p-4 space-y-3 border-b-2 border-slate-800 print-border">
+                        <div>
+                            <div class="flex items-center justify-between text-sm mb-1">
+                                <span class="font-semibold text-slate-700">1. Total Assembly Time</span>
+                            </div>
+                            <div class="grid grid-cols-2 gap-2">
+                                <div class="flex items-center space-x-1">
+                                    <input type="number" min="0" placeholder="0" id="r1_min" oninput="calculateRound(1)" class="w-full border-2 border-slate-400 rounded px-2 py-1 text-right font-bold focus:border-emerald-600 outline-none">
+                                    <span class="text-xs text-slate-500 font-medium">min</span>
+                                </div>
+                                <div class="flex items-center space-x-1">
+                                    <input type="number" min="0" max="59" placeholder="0" id="r1_sec" oninput="calculateRound(1)" class="w-full border-2 border-slate-400 rounded px-2 py-1 text-right font-bold focus:border-emerald-600 outline-none">
+                                    <span class="text-xs text-slate-500 font-medium">sec</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-between text-sm">
+                            <span class="font-semibold text-slate-700">2. Total Units Completed</span>
+                            <input type="number" min="0" id="r1_i2" oninput="calculateRound(1)" class="w-24 border-2 border-slate-400 rounded px-2 py-1 text-right font-bold focus:border-emerald-600 outline-none">
+                        </div>
+                        <div class="flex items-center justify-between text-sm">
+                            <span class="font-semibold text-slate-700">3. Good Units</span>
+                            <input type="number" min="0" id="r1_i3" oninput="calculateRound(1)" class="w-24 border-2 border-slate-400 rounded px-2 py-1 text-right font-bold focus:border-emerald-600 outline-none">
+                        </div>
+                        <div class="flex items-center justify-between text-sm">
+                            <span class="font-semibold text-slate-700">4. Not Good Units</span>
+                            <input type="number" min="0" id="r1_i4" oninput="calculateRound(1)" class="w-24 border-2 border-slate-400 rounded px-2 py-1 text-right font-bold focus:border-emerald-600 outline-none">
+                        </div>
+                        <div class="flex items-center justify-between text-sm">
+                            <span class="font-semibold text-slate-700">5. Total Parts Drawn</span>
+                            <input type="number" min="0" id="r1_i5" oninput="calculateRound(1)" class="w-24 border-2 border-slate-400 rounded px-2 py-1 text-right font-bold focus:border-emerald-600 outline-none">
+                        </div>
+                        <div class="flex items-center justify-between text-sm">
+                            <span class="font-semibold text-slate-700">6. Leftover / Unused Parts</span>
+                            <input type="number" min="0" id="r1_i6" oninput="calculateRound(1)" class="w-24 border-2 border-slate-400 rounded px-2 py-1 text-right font-bold focus:border-emerald-600 outline-none">
+                        </div>
+                    </div>
+
+                    <!-- Performance Metrics Section -->
+                    <div class="bg-slate-50 p-4 space-y-3 border-b-2 border-slate-800 print-border flex-grow">
+                        <h3 class="font-bold italic text-slate-900 border-b border-slate-300 pb-1 text-center">Performance Metrics</h3>
+                        
+                        <div class="flex items-center justify-between text-xs sm:text-sm py-1">
+                            <div>
+                                <span class="font-medium text-slate-700">1. Production Rate</span>
+                                <span class="text-[10px] text-slate-500 block">(Unit/Sec)</span>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <span class="text-[10px] text-slate-400 font-mono">No 2 / No 1</span>
+                                <div id="r1_m1" class="w-24 bg-white border-2 border-slate-300 rounded px-2 py-1 text-right font-bold text-emerald-700">0.00</div>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center justify-between text-xs sm:text-sm py-1">
+                            <div>
+                                <span class="font-medium text-slate-700">2. Average Cycle Time</span>
+                                <span class="text-[10px] text-slate-500 block">(Sec / Unit)</span>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <span class="text-[10px] text-slate-400 font-mono">No 1 / No 2</span>
+                                <div id="r1_m2" class="w-24 bg-white border-2 border-slate-300 rounded px-2 py-1 text-right font-bold text-emerald-700">0.00</div>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center justify-between text-xs sm:text-sm py-1">
+                            <div>
+                                <span class="font-medium text-slate-700">3. First Pass Quality Yield</span>
+                                <span class="text-[10px] text-slate-500 block">(%)</span>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <span class="text-[10px] text-slate-400 font-mono">No 3 / No 2 × 100</span>
+                                <div id="r1_m3" class="w-24 bg-white border-2 border-slate-300 rounded px-2 py-1 text-right font-bold text-emerald-700">0.0%</div>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center justify-between text-xs sm:text-sm py-1">
+                            <div>
+                                <span class="font-medium text-slate-700">4. Material Waste Ratio</span>
+                                <span class="text-[10px] text-slate-500 block">(%)</span>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <span class="text-[10px] text-slate-400 font-mono">No 3 / No 5 × 100</span>
+                                <div id="r1_m4" class="w-24 bg-white border-2 border-slate-300 rounded px-2 py-1 text-right font-bold text-emerald-700">0.0%</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Observed Muda Section -->
+                    <div class="p-4 bg-white space-y-2">
+                        <h3 class="font-bold italic text-slate-900 border-b border-slate-300 pb-1 text-center">Observed Muda (Waste)</h3>
+                        <div class="grid grid-cols-2 gap-2 text-xs">
+                            <label class="flex items-center space-x-2 cursor-pointer p-1 hover:bg-slate-50 rounded">
+                                <input type="checkbox" id="r1_w1" class="w-4 h-4 text-emerald-600 rounded border-slate-400 focus:ring-emerald-500">
+                                <span class="text-slate-700 font-medium">Waiting</span>
+                            </label>
+                            <label class="flex items-center space-x-2 cursor-pointer p-1 hover:bg-slate-50 rounded">
+                                <input type="checkbox" id="r1_w2" class="w-4 h-4 text-emerald-600 rounded border-slate-400 focus:ring-emerald-500">
+                                <span class="text-slate-700 font-medium">Excess Motion</span>
+                            </label>
+                            <label class="flex items-center space-x-2 cursor-pointer p-1 hover:bg-slate-50 rounded">
+                                <input type="checkbox" id="r1_w3" class="w-4 h-4 text-emerald-600 rounded border-slate-400 focus:ring-emerald-500">
+                                <span class="text-slate-700 font-medium">Inventory Waste</span>
+                            </label>
+                            <label class="flex items-center space-x-2 cursor-pointer p-1 hover:bg-slate-50 rounded">
+                                <input type="checkbox" id="r1_w4" class="w-4 h-4 text-emerald-600 rounded border-slate-400 focus:ring-emerald-500">
+                                <span class="text-slate-700 font-medium">Defects</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ROUND 2 -->
+                <div class="border-2 border-slate-800 rounded-xl overflow-hidden flex flex-col bg-white shadow-sm print-border">
+                    <div class="bg-slate-700 text-white text-center font-bold py-3 text-lg tracking-wide">
+                        Round 2
+                    </div>
+                    
+                    <!-- Input Fields Section -->
+                    <div class="p-4 space-y-3 border-b-2 border-slate-800 print-border">
+                        <div>
+                            <div class="flex items-center justify-between text-sm mb-1">
+                                <span class="font-semibold text-slate-700">1. Total Assembly Time</span>
+                            </div>
+                            <div class="grid grid-cols-2 gap-2">
+                                <div class="flex items-center space-x-1">
+                                    <input type="number" min="0" placeholder="0" id="r2_min" oninput="calculateRound(2)" class="w-full border-2 border-slate-400 rounded px-2 py-1 text-right font-bold focus:border-emerald-600 outline-none">
+                                    <span class="text-xs text-slate-500 font-medium">min</span>
+                                </div>
+                                <div class="flex items-center space-x-1">
+                                    <input type="number" min="0" max="59" placeholder="0" id="r2_sec" oninput="calculateRound(2)" class="w-full border-2 border-slate-400 rounded px-2 py-1 text-right font-bold focus:border-emerald-600 outline-none">
+                                    <span class="text-xs text-slate-500 font-medium">sec</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-between text-sm">
+                            <span class="font-semibold text-slate-700">2. Total Units Completed</span>
+                            <input type="number" min="0" id="r2_i2" oninput="calculateRound(2)" class="w-24 border-2 border-slate-400 rounded px-2 py-1 text-right font-bold focus:border-emerald-600 outline-none">
+                        </div>
+                        <div class="flex items-center justify-between text-sm">
+                            <span class="font-semibold text-slate-700">3. Good Units</span>
+                            <input type="number" min="0" id="r2_i3" oninput="calculateRound(2)" class="w-24 border-2 border-slate-400 rounded px-2 py-1 text-right font-bold focus:border-emerald-600 outline-none">
+                        </div>
+                        <div class="flex items-center justify-between text-sm">
+                            <span class="font-semibold text-slate-700">4. Not Good Units</span>
+                            <input type="number" min="0" id="r2_i4" oninput="calculateRound(2)" class="w-24 border-2 border-slate-400 rounded px-2 py-1 text-right font-bold focus:border-emerald-600 outline-none">
+                        </div>
+                        <div class="flex items-center justify-between text-sm">
+                            <span class="font-semibold text-slate-700">5. Total Parts Drawn</span>
+                            <input type="number" min="0" id="r2_i5" oninput="calculateRound(2)" class="w-24 border-2 border-slate-400 rounded px-2 py-1 text-right font-bold focus:border-emerald-600 outline-none">
+                        </div>
+                        <div class="flex items-center justify-between text-sm">
+                            <span class="font-semibold text-slate-700">6. Leftover / Unused Parts</span>
+                            <input type="number" min="0" id="r2_i6" oninput="calculateRound(2)" class="w-24 border-2 border-slate-400 rounded px-2 py-1 text-right font-bold focus:border-emerald-600 outline-none">
+                        </div>
+                    </div>
+
+                    <!-- Performance Metrics Section -->
+                    <div class="bg-slate-50 p-4 space-y-3 border-b-2 border-slate-800 print-border flex-grow">
+                        <h3 class="font-bold italic text-slate-900 border-b border-slate-300 pb-1 text-center">Performance Metrics</h3>
+                        
+                        <div class="flex items-center justify-between text-xs sm:text-sm py-1">
+                            <div>
+                                <span class="font-medium text-slate-700">1. Production Rate</span>
+                                <span class="text-[10px] text-slate-500 block">(Unit/Sec)</span>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <span class="text-[10px] text-slate-400 font-mono">No 2 / No 1</span>
+                                <div id="r2_m1" class="w-24 bg-white border-2 border-slate-300 rounded px-2 py-1 text-right font-bold text-emerald-700">0.00</div>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center justify-between text-xs sm:text-sm py-1">
+                            <div>
+                                <span class="font-medium text-slate-700">2. Average Cycle Time</span>
+                                <span class="text-[10px] text-slate-500 block">(Sec / Unit)</span>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <span class="text-[10px] text-slate-400 font-mono">No 1 / No 2</span>
+                                <div id="r2_m2" class="w-24 bg-white border-2 border-slate-300 rounded px-2 py-1 text-right font-bold text-emerald-700">0.00</div>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center justify-between text-xs sm:text-sm py-1">
+                            <div>
+                                <span class="font-medium text-slate-700">3. First Pass Quality Yield</span>
+                                <span class="text-[10px] text-slate-500 block">(%)</span>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <span class="text-[10px] text-slate-400 font-mono">No 3 / No 2 × 100</span>
+                                <div id="r2_m3" class="w-24 bg-white border-2 border-slate-300 rounded px-2 py-1 text-right font-bold text-emerald-700">0.0%</div>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center justify-between text-xs sm:text-sm py-1">
+                            <div>
+                                <span class="font-medium text-slate-700">4. Material Waste Ratio</span>
+                                <span class="text-[10px] text-slate-500 block">(%)</span>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <span class="text-[10px] text-slate-400 font-mono">No 3 / No 5 × 100</span>
+                                <div id="r2_m4" class="w-24 bg-white border-2 border-slate-300 rounded px-2 py-1 text-right font-bold text-emerald-700">0.0%</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Observed Muda Section -->
+                    <div class="p-4 bg-white space-y-2">
+                        <h3 class="font-bold italic text-slate-900 border-b border-slate-300 pb-1 text-center">Observed Muda (Waste)</h3>
+                        <div class="grid grid-cols-2 gap-2 text-xs">
+                            <label class="flex items-center space-x-2 cursor-pointer p-1 hover:bg-slate-50 rounded">
+                                <input type="checkbox" id="r2_w1" class="w-4 h-4 text-emerald-600 rounded border-slate-400 focus:ring-emerald-500">
+                                <span class="text-slate-700 font-medium">Waiting</span>
+                            </label>
+                            <label class="flex items-center space-x-2 cursor-pointer p-1 hover:bg-slate-50 rounded">
+                                <input type="checkbox" id="r2_w2" class="w-4 h-4 text-emerald-600 rounded border-slate-400 focus:ring-emerald-500">
+                                <span class="text-slate-700 font-medium">Excess Motion</span>
+                            </label>
+                            <label class="flex items-center space-x-2 cursor-pointer p-1 hover:bg-slate-50 rounded">
+                                <input type="checkbox" id="r2_w3" class="w-4 h-4 text-emerald-600 rounded border-slate-400 focus:ring-emerald-500">
+                                <span class="text-slate-700 font-medium">Inventory Waste</span>
+                            </label>
+                            <label class="flex items-center space-x-2 cursor-pointer p-1 hover:bg-slate-50 rounded">
+                                <input type="checkbox" id="r2_w4" class="w-4 h-4 text-emerald-600 rounded border-slate-400 focus:ring-emerald-500">
+                                <span class="text-slate-700 font-medium">Defects</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ROUND 3 -->
+                <div class="border-2 border-slate-800 rounded-xl overflow-hidden flex flex-col bg-white shadow-sm print-border">
+                    <div class="bg-slate-700 text-white text-center font-bold py-3 text-lg tracking-wide">
+                        Round 3
+                    </div>
+                    
+                    <!-- Input Fields Section -->
+                    <div class="p-4 space-y-3 border-b-2 border-slate-800 print-border">
+                        <div>
+                            <div class="flex items-center justify-between text-sm mb-1">
+                                <span class="font-semibold text-slate-700">1. Total Assembly Time</span>
+                            </div>
+                            <div class="grid grid-cols-2 gap-2">
+                                <div class="flex items-center space-x-1">
+                                    <input type="number" min="0" placeholder="0" id="r3_min" oninput="calculateRound(3)" class="w-full border-2 border-slate-400 rounded px-2 py-1 text-right font-bold focus:border-emerald-600 outline-none">
+                                    <span class="text-xs text-slate-500 font-medium">min</span>
+                                </div>
+                                <div class="flex items-center space-x-1">
+                                    <input type="number" min="0" max="59" placeholder="0" id="r3_sec" oninput="calculateRound(3)" class="w-full border-2 border-slate-400 rounded px-2 py-1 text-right font-bold focus:border-emerald-600 outline-none">
+                                    <span class="text-xs text-slate-500 font-medium">sec</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-between text-sm">
+                            <span class="font-semibold text-slate-700">2. Total Units Completed</span>
+                            <input type="number" min="0" id="r3_i2" oninput="calculateRound(3)" class="w-24 border-2 border-slate-400 rounded px-2 py-1 text-right font-bold focus:border-emerald-600 outline-none">
+                        </div>
+                        <div class="flex items-center justify-between text-sm">
+                            <span class="font-semibold text-slate-700">3. Good Units</span>
+                            <input type="number" min="0" id="r3_i3" oninput="calculateRound(3)" class="w-24 border-2 border-slate-400 rounded px-2 py-1 text-right font-bold focus:border-emerald-600 outline-none">
+                        </div>
+                        <div class="flex items-center justify-between text-sm">
+                            <span class="font-semibold text-slate-700">4. Not Good Units</span>
+                            <input type="number" min="0" id="r3_i4" oninput="calculateRound(3)" class="w-24 border-2 border-slate-400 rounded px-2 py-1 text-right font-bold focus:border-emerald-600 outline-none">
+                        </div>
+                        <div class="flex items-center justify-between text-sm">
+                            <span class="font-semibold text-slate-700">5. Total Parts Drawn</span>
+                            <input type="number" min="0" id="r3_i5" oninput="calculateRound(3)" class="w-24 border-2 border-slate-400 rounded px-2 py-1 text-right font-bold focus:border-emerald-600 outline-none">
+                        </div>
+                        <div class="flex items-center justify-between text-sm">
+                            <span class="font-semibold text-slate-700">6. Leftover / Unused Parts</span>
+                            <input type="number" min="0" id="r3_i6" oninput="calculateRound(3)" class="w-24 border-2 border-slate-400 rounded px-2 py-1 text-right font-bold focus:border-emerald-600 outline-none">
+                        </div>
+                    </div>
+
+                    <!-- Performance Metrics Section -->
+                    <div class="bg-slate-50 p-4 space-y-3 border-b-2 border-slate-800 print-border flex-grow">
+                        <h3 class="font-bold italic text-slate-900 border-b border-slate-300 pb-1 text-center">Performance Metrics</h3>
+                        
+                        <div class="flex items-center justify-between text-xs sm:text-sm py-1">
+                            <div>
+                                <span class="font-medium text-slate-700">1. Production Rate</span>
+                                <span class="text-[10px] text-slate-500 block">(Unit/Sec)</span>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <span class="text-[10px] text-slate-400 font-mono">No 2 / No 1</span>
+                                <div id="r3_m1" class="w-24 bg-white border-2 border-slate-300 rounded px-2 py-1 text-right font-bold text-emerald-700">0.00</div>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center justify-between text-xs sm:text-sm py-1">
+                            <div>
+                                <span class="font-medium text-slate-700">2. Average Cycle Time</span>
+                                <span class="text-[10px] text-slate-500 block">(Sec / Unit)</span>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <span class="text-[10px] text-slate-400 font-mono">No 1 / No 2</span>
+                                <div id="r3_m2" class="w-24 bg-white border-2 border-slate-300 rounded px-2 py-1 text-right font-bold text-emerald-700">0.00</div>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center justify-between text-xs sm:text-sm py-1">
+                            <div>
+                                <span class="font-medium text-slate-700">3. First Pass Quality Yield</span>
+                                <span class="text-[10px] text-slate-500 block">(%)</span>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <span class="text-[10px] text-slate-400 font-mono">No 3 / No 2 × 100</span>
+                                <div id="r3_m3" class="w-24 bg-white border-2 border-slate-300 rounded px-2 py-1 text-right font-bold text-emerald-700">0.0%</div>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center justify-between text-xs sm:text-sm py-1">
+                            <div>
+                                <span class="font-medium text-slate-700">4. Material Waste Ratio</span>
+                                <span class="text-[10px] text-slate-500 block">(%)</span>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <span class="text-[10px] text-slate-400 font-mono">No 3 / No 5 × 100</span>
+                                <div id="r3_m4" class="w-24 bg-white border-2 border-slate-300 rounded px-2 py-1 text-right font-bold text-emerald-700">0.0%</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Observed Muda Section -->
+                    <div class="p-4 bg-white space-y-2">
+                        <h3 class="font-bold italic text-slate-900 border-b border-slate-300 pb-1 text-center">Observed Muda (Waste)</h3>
+                        <div class="grid grid-cols-2 gap-2 text-xs">
+                            <label class="flex items-center space-x-2 cursor-pointer p-1 hover:bg-slate-50 rounded">
+                                <input type="checkbox" id="r3_w1" class="w-4 h-4 text-emerald-600 rounded border-slate-400 focus:ring-emerald-500">
+                                <span class="text-slate-700 font-medium">Waiting</span>
+                            </label>
+                            <label class="flex items-center space-x-2 cursor-pointer p-1 hover:bg-slate-50 rounded">
+                                <input type="checkbox" id="r3_w2" class="w-4 h-4 text-emerald-600 rounded border-slate-400 focus:ring-emerald-500">
+                                <span class="text-slate-700 font-medium">Excess Motion</span>
+                            </label>
+                            <label class="flex items-center space-x-2 cursor-pointer p-1 hover:bg-slate-50 rounded">
+                                <input type="checkbox" id="r3_w3" class="w-4 h-4 text-emerald-600 rounded border-slate-400 focus:ring-emerald-500">
+                                <span class="text-slate-700 font-medium">Inventory Waste</span>
+                            </label>
+                            <label class="flex items-center space-x-2 cursor-pointer p-1 hover:bg-slate-50 rounded">
+                                <input type="checkbox" id="r3_w4" class="w-4 h-4 text-emerald-600 rounded border-slate-400 focus:ring-emerald-500">
+                                <span class="text-slate-700 font-medium">Defects</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ROUND 4 -->
+                <div class="border-2 border-slate-800 rounded-xl overflow-hidden flex flex-col bg-white shadow-sm print-border">
+                    <div class="bg-slate-700 text-white text-center font-bold py-3 text-lg tracking-wide">
+                        Round 4
+                    </div>
+                    
+                    <!-- Input Fields Section -->
+                    <div class="p-4 space-y-3 border-b-2 border-slate-800 print-border">
+                        <div>
+                            <div class="flex items-center justify-between text-sm mb-1">
+                                <span class="font-semibold text-slate-700">1. Total Assembly Time</span>
+                            </div>
+                            <div class="grid grid-cols-2 gap-2">
+                                <div class="flex items-center space-x-1">
+                                    <input type="number" min="0" placeholder="0" id="r4_min" oninput="calculateRound(4)" class="w-full border-2 border-slate-400 rounded px-2 py-1 text-right font-bold focus:border-emerald-600 outline-none">
+                                    <span class="text-xs text-slate-500 font-medium">min</span>
+                                </div>
+                                <div class="flex items-center space-x-1">
+                                    <input type="number" min="0" max="59" placeholder="0" id="r4_sec" oninput="calculateRound(4)" class="w-full border-2 border-slate-400 rounded px-2 py-1 text-right font-bold focus:border-emerald-600 outline-none">
+                                    <span class="text-xs text-slate-500 font-medium">sec</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-between text-sm">
+                            <span class="font-semibold text-slate-700">2. Total Units Completed</span>
+                            <input type="number" min="0" id="r4_i2" oninput="calculateRound(4)" class="w-24 border-2 border-slate-400 rounded px-2 py-1 text-right font-bold focus:border-emerald-600 outline-none">
+                        </div>
+                        <div class="flex items-center justify-between text-sm">
+                            <span class="font-semibold text-slate-700">3. Good Units</span>
+                            <input type="number" min="0" id="r4_i3" oninput="calculateRound(4)" class="w-24 border-2 border-slate-400 rounded px-2 py-1 text-right font-bold focus:border-emerald-600 outline-none">
+                        </div>
+                        <div class="flex items-center justify-between text-sm">
+                            <span class="font-semibold text-slate-700">4. Not Good Units</span>
+                            <input type="number" min="0" id="r4_i4" oninput="calculateRound(4)" class="w-24 border-2 border-slate-400 rounded px-2 py-1 text-right font-bold focus:border-emerald-600 outline-none">
+                        </div>
+                        <div class="flex items-center justify-between text-sm">
+                            <span class="font-semibold text-slate-700">5. Total Parts Drawn</span>
+                            <input type="number" min="0" id="r4_i5" oninput="calculateRound(4)" class="w-24 border-2 border-slate-400 rounded px-2 py-1 text-right font-bold focus:border-emerald-600 outline-none">
+                        </div>
+                        <div class="flex items-center justify-between text-sm">
+                            <span class="font-semibold text-slate-700">6. Leftover / Unused Parts</span>
+                            <input type="number" min="0" id="r4_i6" oninput="calculateRound(4)" class="w-24 border-2 border-slate-400 rounded px-2 py-1 text-right font-bold focus:border-emerald-600 outline-none">
+                        </div>
+                    </div>
+
+                    <!-- Performance Metrics Section -->
+                    <div class="bg-slate-50 p-4 space-y-3 border-b-2 border-slate-800 print-border flex-grow">
+                        <h3 class="font-bold italic text-slate-900 border-b border-slate-300 pb-1 text-center">Performance Metrics</h3>
+                        
+                        <div class="flex items-center justify-between text-xs sm:text-sm py-1">
+                            <div>
+                                <span class="font-medium text-slate-700">1. Production Rate</span>
+                                <span class="text-[10px] text-slate-500 block">(Unit/Sec)</span>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <span class="text-[10px] text-slate-400 font-mono">No 2 / No 1</span>
+                                <div id="r4_m1" class="w-24 bg-white border-2 border-slate-300 rounded px-2 py-1 text-right font-bold text-emerald-700">0.00</div>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center justify-between text-xs sm:text-sm py-1">
+                            <div>
+                                <span class="font-medium text-slate-700">2. Average Cycle Time</span>
+                                <span class="text-[10px] text-slate-500 block">(Sec / Unit)</span>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <span class="text-[10px] text-slate-400 font-mono">No 1 / No 2</span>
+                                <div id="r4_m2" class="w-24 bg-white border-2 border-slate-300 rounded px-2 py-1 text-right font-bold text-emerald-700">0.00</div>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center justify-between text-xs sm:text-sm py-1">
+                            <div>
+                                <span class="font-medium text-slate-700">3. First Pass Quality Yield</span>
+                                <span class="text-[10px] text-slate-500 block">(%)</span>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <span class="text-[10px] text-slate-400 font-mono">No 3 / No 2 × 100</span>
+                                <div id="r4_m3" class="w-24 bg-white border-2 border-slate-300 rounded px-2 py-1 text-right font-bold text-emerald-700">0.0%</div>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center justify-between text-xs sm:text-sm py-1">
+                            <div>
+                                <span class="font-medium text-slate-700">4. Material Waste Ratio</span>
+                                <span class="text-[10px] text-slate-500 block">(%)</span>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <span class="text-[10px] text-slate-400 font-mono">No 3 / No 5 × 100</span>
+                                <div id="r4_m4" class="w-24 bg-white border-2 border-slate-300 rounded px-2 py-1 text-right font-bold text-emerald-700">0.0%</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Observed Muda Section -->
+                    <div class="p-4 bg-white space-y-2">
+                        <h3 class="font-bold italic text-slate-900 border-b border-slate-300 pb-1 text-center">Observed Muda (Waste)</h3>
+                        <div class="grid grid-cols-2 gap-2 text-xs">
+                            <label class="flex items-center space-x-2 cursor-pointer p-1 hover:bg-slate-50 rounded">
+                                <input type="checkbox" id="r4_w1" class="w-4 h-4 text-emerald-600 rounded border-slate-400 focus:ring-emerald-500">
+                                <span class="text-slate-700 font-medium">Waiting</span>
+                            </label>
+                            <label class="flex items-center space-x-2 cursor-pointer p-1 hover:bg-slate-50 rounded">
+                                <input type="checkbox" id="r4_w2" class="w-4 h-4 text-emerald-600 rounded border-slate-400 focus:ring-emerald-500">
+                                <span class="text-slate-700 font-medium">Excess Motion</span>
+                            </label>
+                            <label class="flex items-center space-x-2 cursor-pointer p-1 hover:bg-slate-50 rounded">
+                                <input type="checkbox" id="r4_w3" class="w-4 h-4 text-emerald-600 rounded border-slate-400 focus:ring-emerald-500">
+                                <span class="text-slate-700 font-medium">Inventory Waste</span>
+                            </label>
+                            <label class="flex items-center space-x-2 cursor-pointer p-1 hover:bg-slate-50 rounded">
+                                <input type="checkbox" id="r4_w4" class="w-4 h-4 text-emerald-600 rounded border-slate-400 focus:ring-emerald-500">
+                                <span class="text-slate-700 font-medium">Defects</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Analytics Dashboard -->
+            <div class="mt-8 bg-white border-2 border-slate-800 rounded-2xl p-6 shadow-sm">
+                <div class="flex flex-col md:flex-row items-center justify-between gap-4 mb-6 border-b border-slate-200 pb-4">
+                    <div>
+                        <h2 class="text-xl font-bold text-slate-900 flex items-center gap-2">📈 Round-by-Round Performance Trends</h2>
+                        <p class="text-sm text-slate-500">Compare metrics across all 4 production rounds to track continuous improvement.</p>
+                    </div>
+                    <div class="flex items-center gap-2 bg-slate-100 p-1 rounded-xl no-print">
+                        <button onclick="switchMetricTab('prodRate')" id="tab_prodRate" class="px-4 py-2 rounded-lg text-xs font-bold bg-slate-900 text-white transition shadow-sm">Production Rate</button>
+                        <button onclick="switchMetricTab('cycleTime')" id="tab_cycleTime" class="px-4 py-2 rounded-lg text-xs font-bold text-slate-600 hover:text-slate-900 transition">Cycle Time</button>
+                        <button onclick="switchMetricTab('quality')" id="tab_quality" class="px-4 py-2 rounded-lg text-xs font-bold text-slate-600 hover:text-slate-900 transition">Quality Yield</button>
+                        <button onclick="switchMetricTab('waste')" id="tab_waste" class="px-4 py-2 rounded-lg text-xs font-bold text-slate-600 hover:text-slate-900 transition">Waste Ratio</button>
+                    </div>
+                </div>
+
+                <div class="relative h-72 w-full">
+                    <canvas id="metricsChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let metricsChartInstance = null;
+        let currentMetricType = 'prodRate';
+
+        const metricMeta = {
+            prodRate: { label: 'Production Rate (Unit/Sec)', color: '#059669', borderColor: '#059669' },
+            cycleTime: { label: 'Average Cycle Time (Sec/Unit)', color: '#d97706', borderColor: '#d97706' },
+            quality: { label: 'First Pass Quality Yield (%)', color: '#2563eb', borderColor: '#2563eb' },
+            waste: { label: 'Material Waste Ratio (%)', color: '#dc2626', borderColor: '#dc2626' }
+        };
+
+        window.onload = function() {
+            const ctx = document.getElementById('metricsChart').getContext('2d');
+            metricsChartInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['Round 1', 'Round 2', 'Round 3', 'Round 4'],
+                    datasets: [{
+                        label: metricMeta.prodRate.label,
+                        data: [0, 0, 0, 0],
+                        backgroundColor: metricMeta.prodRate.color + '22',
+                        borderColor: metricMeta.prodRate.borderColor,
+                        borderWidth: 3,
+                        pointBackgroundColor: metricMeta.prodRate.borderColor,
+                        pointRadius: 5,
+                        pointHoverRadius: 7,
+                        tension: 0.2,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: { color: '#f1f5f9' }
+                        },
+                        x: {
+                            grid: { display: false }
+                        }
+                    },
+                    plugins: {
+                        legend: { display: false }
+                    }
+                }
+            });
+        };
+
+        function switchMetricTab(type) {
+            currentMetricType = type;
+            ['prodRate', 'cycleTime', 'quality', 'waste'].forEach(t => {
+                const btn = document.getElementById(`tab_${t}`);
+                if (t === type) {
+                    btn.className = "px-4 py-2 rounded-lg text-xs font-bold bg-slate-900 text-white transition shadow-sm";
+                } else {
+                    btn.className = "px-4 py-2 rounded-lg text-xs font-bold text-slate-600 hover:text-slate-900 transition";
+                }
+            });
+            updateChartData();
+        }
+
+        // Real-time calculation logic with Min + Sec converted to total seconds
+        function calculateRound(roundNum) {
+            const mins = parseFloat(document.getElementById(`r${roundNum}_min`).value) || 0;
+            const secs = parseFloat(document.getElementById(`r${roundNum}_sec`).value) || 0;
+            const totalTimeSec = (mins * 60) + secs;
+
+            const completed = parseFloat(document.getElementById(`r${roundNum}_i2`).value) || 0;
+            const good = parseFloat(document.getElementById(`r${roundNum}_i3`).value) || 0;
+            const notGood = parseFloat(document.getElementById(`r${roundNum}_i4`).value) || 0;
+            const partsDrawn = parseFloat(document.getElementById(`r${roundNum}_i5`).value) || 0;
+            const leftover = parseFloat(document.getElementById(`r${roundNum}_i6`).value) || 0;
+
+            // 1. Production Rate (No 2 / No 1 in seconds)
+            const prodRate = totalTimeSec > 0 ? (completed / totalTimeSec) : 0;
+            document.getElementById(`r${roundNum}_m1`).innerText = prodRate > 0 ? prodRate.toFixed(4) : "0.00";
+
+            // 2. Average Cycle Time (No 1 in seconds / No 2)
+            const cycleTime = completed > 0 ? (totalTimeSec / completed) : 0;
+            document.getElementById(`r${roundNum}_m2`).innerText = cycleTime > 0 ? cycleTime.toFixed(2) : "0.00";
+
+            // 3. First Pass Quality Yield (%) -> (No 3 / No 2) x 100
+            const fpq = completed > 0 ? (good / completed) * 100 : 0;
+            document.getElementById(`r${roundNum}_m3`).innerText = fpq.toFixed(1) + "%";
+
+            // 4. Material Waste Ratio (%) -> (No 3 / No 5) x 100
+            const wasteRatio = partsDrawn > 0 ? (good / partsDrawn) * 100 : 0;
+            document.getElementById(`r${roundNum}_m4`).innerText = wasteRatio.toFixed(1) + "%";
+
+            updateChartData();
+        }
+
+        function updateChartData() {
+            if (!metricsChartInstance) return;
+
+            const values = [];
+            for (let r = 1; r <= 4; r++) {
+                let val = 0;
+                if (currentMetricType === 'prodRate') {
+                    val = parseFloat(document.getElementById(`r${r}_m1`).innerText) || 0;
+                } else if (currentMetricType === 'cycleTime') {
+                    val = parseFloat(document.getElementById(`r${r}_m2`).innerText) || 0;
+                } else if (currentMetricType === 'quality') {
+                    const str = document.getElementById(`r${r}_m3`).innerText;
+                    val = parseFloat(str.replace('%', '')) || 0;
+                } else if (currentMetricType === 'waste') {
+                    const str = document.getElementById(`r${r}_m4`).innerText;
+                    val = parseFloat(str.replace('%', '')) || 0;
+                }
+                values.push(val);
+            }
+
+            const meta = metricMeta[currentMetricType];
+            metricsChartInstance.data.datasets[0].label = meta.label;
+            metricsChartInstance.data.datasets[0].data = values;
+            metricsChartInstance.data.datasets[0].backgroundColor = meta.color + '22';
+            metricsChartInstance.data.datasets[0].borderColor = meta.borderColor;
+            metricsChartInstance.data.datasets[0].pointBackgroundColor = meta.borderColor;
+            metricsChartInstance.update();
+        }
+
+        function resetForm() {
+            if (confirm("Are you sure you want to clear all production data?")) {
+                document.querySelectorAll('input').forEach(input => {
+                    if (input.type === 'number') {
+                        input.value = '';
+                    } else if (input.type === 'checkbox') {
+                        input.checked = false;
+                    } else {
+                        input.value = '';
+                    }
+                });
+                for (let r = 1; r <= 4; r++) {
+                    calculateRound(r);
+                }
+            }
+        }
+    </script>
+</body>
+</html>
