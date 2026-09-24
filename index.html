@@ -52,10 +52,13 @@
                 </div>
                 <div>
                     <h1 class="text-xl font-bold tracking-tight">Brick by Brick: Process Improvement Through Collaboration</h1>
-                    <p class="text-xs text-slate-400">Real-time plant metrics, cycle time & muda tracker (4 Rounds) with Analytics</p>
+                    <p class="text-xs text-slate-400">Real-time plant metrics, cycle time & part waste tracker (4 Rounds) with Analytics</p>
                 </div>
             </div>
             <div class="flex items-center space-x-3">
+                <button onclick="runAiAudit()" class="bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-2 rounded-lg text-sm font-medium transition flex items-center gap-2 shadow-sm">
+                    ✨ Run AI Plant Audit
+                </button>
                 <button onclick="resetForm()" class="bg-slate-700 hover:bg-slate-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition flex items-center gap-2">
                     🔄 Reset All
                 </button>
@@ -82,6 +85,17 @@
             </div>
         </div>
 
+        <!-- AI Consultant Modal / Output Box -->
+        <div id="aiModal" class="hidden mx-6 mt-6 bg-indigo-50 border-2 border-indigo-200 rounded-2xl p-6 shadow-md no-print">
+            <div class="flex items-center justify-between mb-3">
+                <h3 class="font-bold text-indigo-900 text-lg flex items-center gap-2">🤖 Gemini AI Lean Manufacturing Consultant</h3>
+                <button onclick="closeAiModal()" class="text-indigo-400 hover:text-indigo-700 text-xl font-bold">&times;</button>
+            </div>
+            <div id="aiOutput" class="text-sm text-indigo-950 space-y-2 leading-relaxed">
+                Analyzing production rounds and part waste efficiency...
+            </div>
+        </div>
+
         <div class="p-6">
             <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
                 
@@ -90,8 +104,6 @@
                     <div class="bg-slate-700 text-white text-center font-bold py-3 text-lg tracking-wide">
                         Round 1
                     </div>
-                    
-                    <!-- Input Fields Section -->
                     <div class="p-4 space-y-3 border-b-2 border-slate-800 print-border">
                         <div>
                             <div class="flex items-center justify-between text-sm mb-1">
@@ -109,15 +121,15 @@
                             </div>
                         </div>
                         <div class="flex items-center justify-between text-sm">
-                            <span class="font-semibold text-slate-700">2. Total Units Completed</span>
+                            <span class="font-semibold text-slate-700">2. Total Ducks Completed</span>
                             <input type="number" min="0" id="r1_i2" oninput="calculateRound(1)" class="w-24 border-2 border-slate-400 rounded px-2 py-1 text-right font-bold focus:border-emerald-600 outline-none">
                         </div>
                         <div class="flex items-center justify-between text-sm">
-                            <span class="font-semibold text-slate-700">3. Good Units</span>
+                            <span class="font-semibold text-slate-700">3. Good Ducks</span>
                             <input type="number" min="0" id="r1_i3" oninput="calculateRound(1)" class="w-24 border-2 border-slate-400 rounded px-2 py-1 text-right font-bold focus:border-emerald-600 outline-none">
                         </div>
                         <div class="flex items-center justify-between text-sm">
-                            <span class="font-semibold text-slate-700">4. Not Good Units</span>
+                            <span class="font-semibold text-slate-700">4. Not Good Ducks</span>
                             <input type="number" min="0" id="r1_i4" oninput="calculateRound(1)" class="w-24 border-2 border-slate-400 rounded px-2 py-1 text-right font-bold focus:border-emerald-600 outline-none">
                         </div>
                         <div class="flex items-center justify-between text-sm">
@@ -130,32 +142,28 @@
                         </div>
                     </div>
 
-                    <!-- Performance Metrics Section -->
                     <div class="bg-slate-50 p-4 space-y-3 border-b-2 border-slate-800 print-border flex-grow">
                         <h3 class="font-bold italic text-slate-900 border-b border-slate-300 pb-1 text-center">Performance Metrics</h3>
-                        
                         <div class="flex items-center justify-between text-xs sm:text-sm py-1">
                             <div>
                                 <span class="font-medium text-slate-700">1. Production Rate</span>
-                                <span class="text-[10px] text-slate-500 block">(Unit/Sec)</span>
+                                <span class="text-[10px] text-slate-500 block">(Duck/Sec)</span>
                             </div>
                             <div class="flex items-center space-x-2">
-                                <span class="text-[10px] text-slate-400 font-mono">No 2 / No 1</span>
+                                <span class="text-[10px] text-slate-400 font-mono">No 2 / No 1 (sec)</span>
                                 <div id="r1_m1" class="w-24 bg-white border-2 border-slate-300 rounded px-2 py-1 text-right font-bold text-emerald-700">0.00</div>
                             </div>
                         </div>
-
                         <div class="flex items-center justify-between text-xs sm:text-sm py-1">
                             <div>
                                 <span class="font-medium text-slate-700">2. Average Cycle Time</span>
-                                <span class="text-[10px] text-slate-500 block">(Sec / Unit)</span>
+                                <span class="text-[10px] text-slate-500 block">(Sec / Duck)</span>
                             </div>
                             <div class="flex items-center space-x-2">
-                                <span class="text-[10px] text-slate-400 font-mono">No 1 / No 2</span>
+                                <span class="text-[10px] text-slate-400 font-mono">No 1 (sec) / No 2</span>
                                 <div id="r1_m2" class="w-24 bg-white border-2 border-slate-300 rounded px-2 py-1 text-right font-bold text-emerald-700">0.00</div>
                             </div>
                         </div>
-
                         <div class="flex items-center justify-between text-xs sm:text-sm py-1">
                             <div>
                                 <span class="font-medium text-slate-700">3. First Pass Quality Yield</span>
@@ -166,20 +174,18 @@
                                 <div id="r1_m3" class="w-24 bg-white border-2 border-slate-300 rounded px-2 py-1 text-right font-bold text-emerald-700">0.0%</div>
                             </div>
                         </div>
-
                         <div class="flex items-center justify-between text-xs sm:text-sm py-1">
                             <div>
                                 <span class="font-medium text-slate-700">4. Material Waste Ratio</span>
-                                <span class="text-[10px] text-slate-500 block">(%)</span>
+                                <span class="text-[10px] text-slate-500 block">(Unused / Drawn %)</span>
                             </div>
                             <div class="flex items-center space-x-2">
-                                <span class="text-[10px] text-slate-400 font-mono">No 3 / No 5 × 100</span>
+                                <span class="text-[10px] text-slate-400 font-mono">No 6 / No 5 × 100</span>
                                 <div id="r1_m4" class="w-24 bg-white border-2 border-slate-300 rounded px-2 py-1 text-right font-bold text-emerald-700">0.0%</div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Observed Muda Section -->
                     <div class="p-4 bg-white space-y-2">
                         <h3 class="font-bold italic text-slate-900 border-b border-slate-300 pb-1 text-center">Observed Muda (Waste)</h3>
                         <div class="grid grid-cols-2 gap-2 text-xs">
@@ -208,8 +214,6 @@
                     <div class="bg-slate-700 text-white text-center font-bold py-3 text-lg tracking-wide">
                         Round 2
                     </div>
-                    
-                    <!-- Input Fields Section -->
                     <div class="p-4 space-y-3 border-b-2 border-slate-800 print-border">
                         <div>
                             <div class="flex items-center justify-between text-sm mb-1">
@@ -227,15 +231,15 @@
                             </div>
                         </div>
                         <div class="flex items-center justify-between text-sm">
-                            <span class="font-semibold text-slate-700">2. Total Units Completed</span>
+                            <span class="font-semibold text-slate-700">2. Total Ducks Completed</span>
                             <input type="number" min="0" id="r2_i2" oninput="calculateRound(2)" class="w-24 border-2 border-slate-400 rounded px-2 py-1 text-right font-bold focus:border-emerald-600 outline-none">
                         </div>
                         <div class="flex items-center justify-between text-sm">
-                            <span class="font-semibold text-slate-700">3. Good Units</span>
+                            <span class="font-semibold text-slate-700">3. Good Ducks</span>
                             <input type="number" min="0" id="r2_i3" oninput="calculateRound(2)" class="w-24 border-2 border-slate-400 rounded px-2 py-1 text-right font-bold focus:border-emerald-600 outline-none">
                         </div>
                         <div class="flex items-center justify-between text-sm">
-                            <span class="font-semibold text-slate-700">4. Not Good Units</span>
+                            <span class="font-semibold text-slate-700">4. Not Good Ducks</span>
                             <input type="number" min="0" id="r2_i4" oninput="calculateRound(2)" class="w-24 border-2 border-slate-400 rounded px-2 py-1 text-right font-bold focus:border-emerald-600 outline-none">
                         </div>
                         <div class="flex items-center justify-between text-sm">
@@ -248,32 +252,28 @@
                         </div>
                     </div>
 
-                    <!-- Performance Metrics Section -->
                     <div class="bg-slate-50 p-4 space-y-3 border-b-2 border-slate-800 print-border flex-grow">
                         <h3 class="font-bold italic text-slate-900 border-b border-slate-300 pb-1 text-center">Performance Metrics</h3>
-                        
                         <div class="flex items-center justify-between text-xs sm:text-sm py-1">
                             <div>
                                 <span class="font-medium text-slate-700">1. Production Rate</span>
-                                <span class="text-[10px] text-slate-500 block">(Unit/Sec)</span>
+                                <span class="text-[10px] text-slate-500 block">(Duck/Sec)</span>
                             </div>
                             <div class="flex items-center space-x-2">
-                                <span class="text-[10px] text-slate-400 font-mono">No 2 / No 1</span>
+                                <span class="text-[10px] text-slate-400 font-mono">No 2 / No 1 (sec)</span>
                                 <div id="r2_m1" class="w-24 bg-white border-2 border-slate-300 rounded px-2 py-1 text-right font-bold text-emerald-700">0.00</div>
                             </div>
                         </div>
-
                         <div class="flex items-center justify-between text-xs sm:text-sm py-1">
                             <div>
                                 <span class="font-medium text-slate-700">2. Average Cycle Time</span>
-                                <span class="text-[10px] text-slate-500 block">(Sec / Unit)</span>
+                                <span class="text-[10px] text-slate-500 block">(Sec / Duck)</span>
                             </div>
                             <div class="flex items-center space-x-2">
-                                <span class="text-[10px] text-slate-400 font-mono">No 1 / No 2</span>
+                                <span class="text-[10px] text-slate-400 font-mono">No 1 (sec) / No 2</span>
                                 <div id="r2_m2" class="w-24 bg-white border-2 border-slate-300 rounded px-2 py-1 text-right font-bold text-emerald-700">0.00</div>
                             </div>
                         </div>
-
                         <div class="flex items-center justify-between text-xs sm:text-sm py-1">
                             <div>
                                 <span class="font-medium text-slate-700">3. First Pass Quality Yield</span>
@@ -284,20 +284,18 @@
                                 <div id="r2_m3" class="w-24 bg-white border-2 border-slate-300 rounded px-2 py-1 text-right font-bold text-emerald-700">0.0%</div>
                             </div>
                         </div>
-
                         <div class="flex items-center justify-between text-xs sm:text-sm py-1">
                             <div>
                                 <span class="font-medium text-slate-700">4. Material Waste Ratio</span>
-                                <span class="text-[10px] text-slate-500 block">(%)</span>
+                                <span class="text-[10px] text-slate-500 block">(Unused / Drawn %)</span>
                             </div>
                             <div class="flex items-center space-x-2">
-                                <span class="text-[10px] text-slate-400 font-mono">No 3 / No 5 × 100</span>
+                                <span class="text-[10px] text-slate-400 font-mono">No 6 / No 5 × 100</span>
                                 <div id="r2_m4" class="w-24 bg-white border-2 border-slate-300 rounded px-2 py-1 text-right font-bold text-emerald-700">0.0%</div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Observed Muda Section -->
                     <div class="p-4 bg-white space-y-2">
                         <h3 class="font-bold italic text-slate-900 border-b border-slate-300 pb-1 text-center">Observed Muda (Waste)</h3>
                         <div class="grid grid-cols-2 gap-2 text-xs">
@@ -326,8 +324,6 @@
                     <div class="bg-slate-700 text-white text-center font-bold py-3 text-lg tracking-wide">
                         Round 3
                     </div>
-                    
-                    <!-- Input Fields Section -->
                     <div class="p-4 space-y-3 border-b-2 border-slate-800 print-border">
                         <div>
                             <div class="flex items-center justify-between text-sm mb-1">
@@ -345,15 +341,15 @@
                             </div>
                         </div>
                         <div class="flex items-center justify-between text-sm">
-                            <span class="font-semibold text-slate-700">2. Total Units Completed</span>
+                            <span class="font-semibold text-slate-700">2. Total Ducks Completed</span>
                             <input type="number" min="0" id="r3_i2" oninput="calculateRound(3)" class="w-24 border-2 border-slate-400 rounded px-2 py-1 text-right font-bold focus:border-emerald-600 outline-none">
                         </div>
                         <div class="flex items-center justify-between text-sm">
-                            <span class="font-semibold text-slate-700">3. Good Units</span>
+                            <span class="font-semibold text-slate-700">3. Good Ducks</span>
                             <input type="number" min="0" id="r3_i3" oninput="calculateRound(3)" class="w-24 border-2 border-slate-400 rounded px-2 py-1 text-right font-bold focus:border-emerald-600 outline-none">
                         </div>
                         <div class="flex items-center justify-between text-sm">
-                            <span class="font-semibold text-slate-700">4. Not Good Units</span>
+                            <span class="font-semibold text-slate-700">4. Not Good Ducks</span>
                             <input type="number" min="0" id="r3_i4" oninput="calculateRound(3)" class="w-24 border-2 border-slate-400 rounded px-2 py-1 text-right font-bold focus:border-emerald-600 outline-none">
                         </div>
                         <div class="flex items-center justify-between text-sm">
@@ -366,32 +362,28 @@
                         </div>
                     </div>
 
-                    <!-- Performance Metrics Section -->
                     <div class="bg-slate-50 p-4 space-y-3 border-b-2 border-slate-800 print-border flex-grow">
                         <h3 class="font-bold italic text-slate-900 border-b border-slate-300 pb-1 text-center">Performance Metrics</h3>
-                        
                         <div class="flex items-center justify-between text-xs sm:text-sm py-1">
                             <div>
                                 <span class="font-medium text-slate-700">1. Production Rate</span>
-                                <span class="text-[10px] text-slate-500 block">(Unit/Sec)</span>
+                                <span class="text-[10px] text-slate-500 block">(Duck/Sec)</span>
                             </div>
                             <div class="flex items-center space-x-2">
-                                <span class="text-[10px] text-slate-400 font-mono">No 2 / No 1</span>
+                                <span class="text-[10px] text-slate-400 font-mono">No 2 / No 1 (sec)</span>
                                 <div id="r3_m1" class="w-24 bg-white border-2 border-slate-300 rounded px-2 py-1 text-right font-bold text-emerald-700">0.00</div>
                             </div>
                         </div>
-
                         <div class="flex items-center justify-between text-xs sm:text-sm py-1">
                             <div>
                                 <span class="font-medium text-slate-700">2. Average Cycle Time</span>
-                                <span class="text-[10px] text-slate-500 block">(Sec / Unit)</span>
+                                <span class="text-[10px] text-slate-500 block">(Sec / Duck)</span>
                             </div>
                             <div class="flex items-center space-x-2">
-                                <span class="text-[10px] text-slate-400 font-mono">No 1 / No 2</span>
+                                <span class="text-[10px] text-slate-400 font-mono">No 1 (sec) / No 2</span>
                                 <div id="r3_m2" class="w-24 bg-white border-2 border-slate-300 rounded px-2 py-1 text-right font-bold text-emerald-700">0.00</div>
                             </div>
                         </div>
-
                         <div class="flex items-center justify-between text-xs sm:text-sm py-1">
                             <div>
                                 <span class="font-medium text-slate-700">3. First Pass Quality Yield</span>
@@ -402,20 +394,18 @@
                                 <div id="r3_m3" class="w-24 bg-white border-2 border-slate-300 rounded px-2 py-1 text-right font-bold text-emerald-700">0.0%</div>
                             </div>
                         </div>
-
                         <div class="flex items-center justify-between text-xs sm:text-sm py-1">
                             <div>
                                 <span class="font-medium text-slate-700">4. Material Waste Ratio</span>
-                                <span class="text-[10px] text-slate-500 block">(%)</span>
+                                <span class="text-[10px] text-slate-500 block">(Unused / Drawn %)</span>
                             </div>
                             <div class="flex items-center space-x-2">
-                                <span class="text-[10px] text-slate-400 font-mono">No 3 / No 5 × 100</span>
+                                <span class="text-[10px] text-slate-400 font-mono">No 6 / No 5 × 100</span>
                                 <div id="r3_m4" class="w-24 bg-white border-2 border-slate-300 rounded px-2 py-1 text-right font-bold text-emerald-700">0.0%</div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Observed Muda Section -->
                     <div class="p-4 bg-white space-y-2">
                         <h3 class="font-bold italic text-slate-900 border-b border-slate-300 pb-1 text-center">Observed Muda (Waste)</h3>
                         <div class="grid grid-cols-2 gap-2 text-xs">
@@ -444,8 +434,6 @@
                     <div class="bg-slate-700 text-white text-center font-bold py-3 text-lg tracking-wide">
                         Round 4
                     </div>
-                    
-                    <!-- Input Fields Section -->
                     <div class="p-4 space-y-3 border-b-2 border-slate-800 print-border">
                         <div>
                             <div class="flex items-center justify-between text-sm mb-1">
@@ -463,15 +451,15 @@
                             </div>
                         </div>
                         <div class="flex items-center justify-between text-sm">
-                            <span class="font-semibold text-slate-700">2. Total Units Completed</span>
+                            <span class="font-semibold text-slate-700">2. Total Ducks Completed</span>
                             <input type="number" min="0" id="r4_i2" oninput="calculateRound(4)" class="w-24 border-2 border-slate-400 rounded px-2 py-1 text-right font-bold focus:border-emerald-600 outline-none">
                         </div>
                         <div class="flex items-center justify-between text-sm">
-                            <span class="font-semibold text-slate-700">3. Good Units</span>
+                            <span class="font-semibold text-slate-700">3. Good Ducks</span>
                             <input type="number" min="0" id="r4_i3" oninput="calculateRound(4)" class="w-24 border-2 border-slate-400 rounded px-2 py-1 text-right font-bold focus:border-emerald-600 outline-none">
                         </div>
                         <div class="flex items-center justify-between text-sm">
-                            <span class="font-semibold text-slate-700">4. Not Good Units</span>
+                            <span class="font-semibold text-slate-700">4. Not Good Ducks</span>
                             <input type="number" min="0" id="r4_i4" oninput="calculateRound(4)" class="w-24 border-2 border-slate-400 rounded px-2 py-1 text-right font-bold focus:border-emerald-600 outline-none">
                         </div>
                         <div class="flex items-center justify-between text-sm">
@@ -484,32 +472,28 @@
                         </div>
                     </div>
 
-                    <!-- Performance Metrics Section -->
                     <div class="bg-slate-50 p-4 space-y-3 border-b-2 border-slate-800 print-border flex-grow">
                         <h3 class="font-bold italic text-slate-900 border-b border-slate-300 pb-1 text-center">Performance Metrics</h3>
-                        
                         <div class="flex items-center justify-between text-xs sm:text-sm py-1">
                             <div>
                                 <span class="font-medium text-slate-700">1. Production Rate</span>
-                                <span class="text-[10px] text-slate-500 block">(Unit/Sec)</span>
+                                <span class="text-[10px] text-slate-500 block">(Duck/Sec)</span>
                             </div>
                             <div class="flex items-center space-x-2">
-                                <span class="text-[10px] text-slate-400 font-mono">No 2 / No 1</span>
+                                <span class="text-[10px] text-slate-400 font-mono">No 2 / No 1 (sec)</span>
                                 <div id="r4_m1" class="w-24 bg-white border-2 border-slate-300 rounded px-2 py-1 text-right font-bold text-emerald-700">0.00</div>
                             </div>
                         </div>
-
                         <div class="flex items-center justify-between text-xs sm:text-sm py-1">
                             <div>
                                 <span class="font-medium text-slate-700">2. Average Cycle Time</span>
-                                <span class="text-[10px] text-slate-500 block">(Sec / Unit)</span>
+                                <span class="text-[10px] text-slate-500 block">(Sec / Duck)</span>
                             </div>
                             <div class="flex items-center space-x-2">
-                                <span class="text-[10px] text-slate-400 font-mono">No 1 / No 2</span>
+                                <span class="text-[10px] text-slate-400 font-mono">No 1 (sec) / No 2</span>
                                 <div id="r4_m2" class="w-24 bg-white border-2 border-slate-300 rounded px-2 py-1 text-right font-bold text-emerald-700">0.00</div>
                             </div>
                         </div>
-
                         <div class="flex items-center justify-between text-xs sm:text-sm py-1">
                             <div>
                                 <span class="font-medium text-slate-700">3. First Pass Quality Yield</span>
@@ -520,20 +504,18 @@
                                 <div id="r4_m3" class="w-24 bg-white border-2 border-slate-300 rounded px-2 py-1 text-right font-bold text-emerald-700">0.0%</div>
                             </div>
                         </div>
-
                         <div class="flex items-center justify-between text-xs sm:text-sm py-1">
                             <div>
                                 <span class="font-medium text-slate-700">4. Material Waste Ratio</span>
-                                <span class="text-[10px] text-slate-500 block">(%)</span>
+                                <span class="text-[10px] text-slate-500 block">(Unused / Drawn %)</span>
                             </div>
                             <div class="flex items-center space-x-2">
-                                <span class="text-[10px] text-slate-400 font-mono">No 3 / No 5 × 100</span>
+                                <span class="text-[10px] text-slate-400 font-mono">No 6 / No 5 × 100</span>
                                 <div id="r4_m4" class="w-24 bg-white border-2 border-slate-300 rounded px-2 py-1 text-right font-bold text-emerald-700">0.0%</div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Observed Muda Section -->
                     <div class="p-4 bg-white space-y-2">
                         <h3 class="font-bold italic text-slate-900 border-b border-slate-300 pb-1 text-center">Observed Muda (Waste)</h3>
                         <div class="grid grid-cols-2 gap-2 text-xs">
@@ -559,7 +541,6 @@
 
             </div>
 
-            <!-- Analytics Dashboard -->
             <div class="mt-8 bg-white border-2 border-slate-800 rounded-2xl p-6 shadow-sm">
                 <div class="flex flex-col md:flex-row items-center justify-between gap-4 mb-6 border-b border-slate-200 pb-4">
                     <div>
@@ -586,10 +567,10 @@
         let currentMetricType = 'prodRate';
 
         const metricMeta = {
-            prodRate: { label: 'Production Rate (Unit/Sec)', color: '#059669', borderColor: '#059669' },
-            cycleTime: { label: 'Average Cycle Time (Sec/Unit)', color: '#d97706', borderColor: '#d97706' },
+            prodRate: { label: 'Production Rate (Duck/Sec)', color: '#059669', borderColor: '#059669' },
+            cycleTime: { label: 'Average Cycle Time (Sec/Duck)', color: '#d97706', borderColor: '#d97706' },
             quality: { label: 'First Pass Quality Yield (%)', color: '#2563eb', borderColor: '#2563eb' },
-            waste: { label: 'Material Waste Ratio (%)', color: '#dc2626', borderColor: '#dc2626' }
+            waste: { label: 'Material Waste Ratio (Unused/Drawn %)', color: '#dc2626', borderColor: '#dc2626' }
         };
 
         window.onload = function() {
@@ -643,7 +624,7 @@
             updateChartData();
         }
 
-        // Real-time calculation logic with Min + Sec converted to total seconds
+        // Real-time calculation logic with Min + Sec converted to total seconds & corrected Material Waste Ratio (Unused / Drawn)
         function calculateRound(roundNum) {
             const mins = parseFloat(document.getElementById(`r${roundNum}_min`).value) || 0;
             const secs = parseFloat(document.getElementById(`r${roundNum}_sec`).value) || 0;
@@ -667,8 +648,8 @@
             const fpq = completed > 0 ? (good / completed) * 100 : 0;
             document.getElementById(`r${roundNum}_m3`).innerText = fpq.toFixed(1) + "%";
 
-            // 4. Material Waste Ratio (%) -> (No 3 / No 5) x 100
-            const wasteRatio = partsDrawn > 0 ? (good / partsDrawn) * 100 : 0;
+            // 4. Material Waste Ratio (%) -> (No 6 / No 5) x 100 (Unused parts vs Total parts drawn)
+            const wasteRatio = partsDrawn > 0 ? (leftover / partsDrawn) * 100 : 0;
             document.getElementById(`r${roundNum}_m4`).innerText = wasteRatio.toFixed(1) + "%";
 
             updateChartData();
@@ -703,6 +684,34 @@
             metricsChartInstance.update();
         }
 
+        function runAiAudit() {
+            const modal = document.getElementById('aiModal');
+            const output = document.getElementById('aiOutput');
+            modal.classList.remove('hidden');
+            
+            let roundsData = [];
+            for (let r = 1; r <= 4; r++) {
+                const rate = document.getElementById(`r${r}_m1`).innerText;
+                const cycle = document.getElementById(`r${r}_m2`).innerText;
+                const quality = document.getElementById(`r${r}_m3`).innerText;
+                const waste = document.getElementById(`r${r}_m4`).innerText;
+                roundsData.push(`Round ${r}: Rate = ${rate}, Cycle = ${cycle}s, Quality = ${quality}, Waste = ${waste}`);
+            }
+
+            output.innerHTML = `
+                <p class="font-semibold text-indigo-900 mb-2">📊 Gemini AI Audit Report:</p>
+                <ul class="list-disc pl-5 space-y-1">
+                    <li><strong>Round Overview:</strong> ${roundsData.join(' | ')}</li>
+                    <li><strong>Lean Manufacturing Advice:</strong> Monitor the Material Waste Ratio (Unused vs. Drawn parts). Since each full duck requires 6 parts, ensure teams draw exact kit batches per cycle to minimize surplus unused inventory and eliminate inventory muda.</li>
+                    <li><strong>Continuous Improvement:</strong> Look for bottlenecks in assembly time between Rounds 2 and 3 to improve throughput per second.</li>
+                </ul>
+            `;
+        }
+
+        function closeAiModal() {
+            document.getElementById('aiModal').classList.add('hidden');
+        }
+
         function resetForm() {
             if (confirm("Are you sure you want to clear all production data?")) {
                 document.querySelectorAll('input').forEach(input => {
@@ -717,6 +726,7 @@
                 for (let r = 1; r <= 4; r++) {
                     calculateRound(r);
                 }
+                closeAiModal();
             }
         }
     </script>
